@@ -1,0 +1,110 @@
+# Dependencies
+/vendor/
+composer.phar
+composer.lock
+
+# Node modules and frontend dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+.env.development
+config/database.php
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.phpstorm.meta.php
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+/logs/
+/storage/logs/
+
+# Cache and temporary files
+/cache/
+/tmp/
+/temp/
+*.tmp
+*.cache
+
+# Upload directories
+/uploads/
+/public/uploads/
+/storage/uploads/
+
+# Session files
+/storage/sessions/
+
+# Frontend build artifacts
+/dist/
+/build/
+/public/dist/
+/public/build/
+/public/js/
+/public/css/
+/public/assets/compiled/
+
+# Frontend tooling
+.sass-cache/
+*.css.map
+*.js.map
+
+# Webpack
+webpack-stats.json
+
+# Vite
+.vite/
+vite.config.js.timestamp-*
+
+# Parcel
+.parcel-cache/
+.cache/
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Local development
+/public/hot
+/public/storage
+/storage/*.key
+
+# PHP specific
+*.php~
+.phpunit.result.cache
+phpunit.xml
+
+# Testing
+/tests/coverage/
+.nyc_output/
+
+# Miscellaneous
+.eslintcache
+.stylelintcache

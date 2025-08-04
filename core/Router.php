@@ -46,6 +46,14 @@ class Router
             // Set params
             $this->params = $url ? array_values($url) : [];
         }
+
+        if(!method_exists($this->controller, $this->method)) {
+            if(method_exists($this->controller, 'index')) {
+                $this->method = 'index';
+            } else {
+                throw new \Exception("Method {$this->method} not found in controller {$this->controller}");
+            }
+        }
     }
 
     /**
