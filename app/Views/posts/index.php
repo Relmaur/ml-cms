@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?></title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,6 +25,11 @@
                 <h2><?php echo htmlspecialchars($post->title) ?></h2>
                 <p><?php echo nl2br(htmlspecialchars($post->body)) ?></p>
                 <p><small><?php echo date('F j, Y', strtotime($post->created_at)); ?></small></p>
+
+                <p>
+                    <a href="/posts/show/<?php echo $post->id; ?>">Read More</a> |
+                    <a href="/posts/edit/<?php echo $post->id; ?>">Edit</a>
+                </p>
             </article>
             <hr>
         <?php endforeach; ?>

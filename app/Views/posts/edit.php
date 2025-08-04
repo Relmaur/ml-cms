@@ -26,7 +26,7 @@
         }
 
         button {
-            margin-top: 20px;
+            margin: 20px 0;
             padding: 10px 20px;
             cursor: pointer;
         }
@@ -44,7 +44,7 @@
             </div>
             <div>
                 <label for="body">Content</label>
-                <textarea name="body" id="body" required><?php echo htmlspecialchars($post->body); ?></textarea>
+                <textarea name="body" id="body" required rows="10"><?php echo htmlspecialchars($post->body); ?></textarea>
             </div>
             <button type="submit">Update Post</button>
         </form>

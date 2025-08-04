@@ -36,6 +36,7 @@
 <body>
     <header></header>
     <main>
+        <h1>Create Post</h1>
         <form action="/posts/store" method="POST">
             <div>
                 <label for="title">Title</label>

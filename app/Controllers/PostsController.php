@@ -129,4 +129,20 @@ class PostsController
             exit();
         }
     }
+
+    /**
+     * Delete a post.
+     */
+    public function destroy($id)
+    {
+        // TODO: Checl for authorization
+
+        if ($this->postModel->deletePost($id)) {
+            // Redirect to the blog index on success
+            header('Location: /posts/index');
+            exit();
+        } else {
+            die('Something went worng.');
+        }
+    }
 }
