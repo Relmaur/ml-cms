@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\Post;
 use Core\Session;
+use Core\View;
 
 class PostsController extends BaseController
 {
@@ -26,9 +27,11 @@ class PostsController extends BaseController
     public function index()
     {
         $posts = $this->postModel->getAllPosts();
-        $pageTitle = 'All Posts';
 
-        require_once '../app/Views/posts/index.php';
+        View::render('posts/index', [
+            'posts' => $posts,
+            'pageTitle' => 'All Posts'
+        ]);
     }
 
     /**
@@ -40,7 +43,10 @@ class PostsController extends BaseController
         $post = $this->postModel->getPostById($id);
         $pageTitle = $post ? $post->title : 'Post Not Found';
 
-        require_once '../app/Views/posts/show.php';
+        View::render('posts/show', [
+            'post' => $post,
+            'pageTitle' => $pageTitle
+        ]);
     }
 
     /**
@@ -56,7 +62,10 @@ class PostsController extends BaseController
         $this->requireAuth();
 
         $pageTitle = 'Create New Post';
-        require_once '../app/Views/posts/create.php';
+
+        View::render('posts/create', [
+            'pageTitle' => $pageTitle
+        ]);
     }
 
     /**
@@ -116,7 +125,11 @@ class PostsController extends BaseController
         }
 
         $pageTitle = 'Edit Post';
-        require_once '../app/Views/posts/edit.php';
+
+        View::render('posts/edit', [
+            'pageTitle' => $pageTitle,
+            'post' => $post
+        ]);
     }
 
     /**

@@ -15,8 +15,8 @@
     ],
     "require": {},
     "scripts": {
-        "migrate": "php bin/migrate.php",
         "make:migration": "php bin/make-migration.php",
-        "migrate:rollback": "php bin/migrate-rollback.php"
+        "migrate:rollback": "php bin/migrate-rollback.php",
+        "migrate": "php bin/migrate.php"
     }
 }
