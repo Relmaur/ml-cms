@@ -27,7 +27,7 @@ use Core\Session; ?>
 <body>
     <?php if ($post): ?>
         <h1><?php echo htmlspecialchars($post->title); ?></h1>
-        <p><small>Created on: <?php echo date('F j, Y', strtotime($post->created_at)) ?></small></p>
+        <p><small>Created on: <?php echo date('F j, Y', strtotime($post->created_at)) ?></small> | <small>By: <strong><?php echo htmlspecialchars($post->author_name ?? 'Unknown') ?></strong></small></p>
         <div><?php echo nl2br(htmlspecialchars($post->content)) ?></div>
         <?php if (Session::isAuthenticated()): ?>
             <a href="/posts/edit/<?php echo $post->id; ?>">Edit this post</a>

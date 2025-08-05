@@ -18,7 +18,12 @@ class Post
      */
     public function getAllPosts()
     {
-        $this->db->query("SELECT * FROM posts ORDER BY created_at DESC");
+        $this->db->query("
+            SELECT posts.*, users.name AS author_name
+            FROM posts
+            LEFT JOIN users ON posts.author_id = users.id
+            ORDER BY posts.created_at DESC
+        ");
         return $this->db->fetchAll();
     }
 
@@ -27,7 +32,12 @@ class Post
      */
     public function getPostById($id)
     {
-        $this->db->query("SELECT * FROM posts WHERE id = :id");
+        $this->db->query("
+            SELECT posts.*, users.name AS author_name
+            FROM posts
+            LEFT JOIN users ON posts.author_id = users.id
+            WHERE posts.id = :id
+        ");
         $this->db->bind(':id', $id);
         return $this->db->fetch();
     }
@@ -37,11 +47,12 @@ class Post
      */
     public function createPost($data)
     {
-        $this->db->query("INSERT INTO posts (title, content) VALUES (:title, :content)");
+        $this->db->query("INSERT INTO posts (title, content, author_id) VALUES (:title, :content, :author_id)");
 
         // Bind values
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':content', $data['content']);
+        $this->db->bind(':author_id', $data['author_id']);
 
         // Execute
         if ($this->db->execute()) {
