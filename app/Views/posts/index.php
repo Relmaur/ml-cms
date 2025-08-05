@@ -33,6 +33,7 @@ use Core\Session; ?>
                 <h2><?php echo htmlspecialchars($post->title) ?></h2>
                 <p><?php echo nl2br(htmlspecialchars($post->content)) ?></p>
                 <p><small><?php echo date('F j, Y', strtotime($post->created_at)); ?></small></p>
+                <p><small>By: <strong><?php echo htmlspecialchars($post->author_name ?? 'Unknown') ?></strong></small></p>
 
                 <?php if (Session::isAuthenticated()): ?>
                     <p>
@@ -48,4 +49,3 @@ use Core\Session; ?>
 </body>
 
 </html>
-

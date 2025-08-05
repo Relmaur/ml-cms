@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Post;
+use Core\Session;
 
 class PostsController extends BaseController
 {
@@ -71,7 +72,8 @@ class PostsController extends BaseController
         if (isset($_POST['title']) && isset($_POST['content']) && !empty($_POST['title']) && !empty($_POST['content'])) {
             $data = [
                 'title' => trim($_POST['title']),
-                'content' => trim($_POST['content'])
+                'content' => trim($_POST['content']),
+                'author_id' => Session::get('user_id'),
             ];
 
             // Sanitize data before inserting (!importing)
@@ -107,9 +109,10 @@ class PostsController extends BaseController
 
         // IN a production app, you'd check if the user is authorized to edit this post.
 
-        if (!$post) {
+        if ($post->author_id !== Session::get('user_id')) {
             // Post not found, handle error (e.g., show 404 page)
-            die('Post not found.');
+            http_response_code(403);
+            die('You are not authorized to edit this post.');
         }
 
         $pageTitle = 'Edit Post';
