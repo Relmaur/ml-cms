@@ -68,15 +68,15 @@ class PostsController extends BaseController
         $this->requireAuth();
 
         // Basic validation
-        if (isset($_POST['title']) && isset($_POST['body']) && !empty($_POST['title']) && !empty($_POST['body'])) {
+        if (isset($_POST['title']) && isset($_POST['content']) && !empty($_POST['title']) && !empty($_POST['content'])) {
             $data = [
                 'title' => trim($_POST['title']),
-                'body' => trim($_POST['body'])
+                'content' => trim($_POST['content'])
             ];
 
             // Sanitize data before inserting (!importing)
             $data['title'] = htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8');
-            $data['body'] = htmlspecialchars($data['body'], ENT_QUOTES, 'UTF-8');
+            $data['content'] = htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8');
 
             if ($this->postModel->createPost($data)) {
                 // Redirect to the blog index on success
@@ -126,16 +126,16 @@ class PostsController extends BaseController
         $this->requireAuth();
 
         // Basic validation TODO: Strengthen this
-        if (isset($_POST['title']) && isset($_POST['body']) && !empty($_POST['title']) && !empty($_POST['body'])) {
+        if (isset($_POST['title']) && isset($_POST['content']) && !empty($_POST['title']) && !empty($_POST['content'])) {
             $data = [
                 'id' => $id,
                 'title' => trim($_POST['title']),
-                'body' => trim($_POST['body'])
+                'content' => trim($_POST['content'])
             ];
 
             // Sanitize data
             $data['title'] = htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8');
-            $data['body'] = htmlspecialchars($data['body'], ENT_QUOTES, 'UTF-8');
+            $data['content'] = htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8');
 
             if ($this->postModel->updatePost($data)) {
                 // Redirect to the post's page on success

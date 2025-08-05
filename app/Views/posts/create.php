@@ -43,8 +43,8 @@
                 <input type="text" id="title" name="title" required>
             </div>
             <div>
-                <label for="body">Content</label>
-                <textarea name="body" id="body" rows="10" required></textarea>
+                <label for="content">Content</label>
+                <textarea name="content" id="content" rows="10" required></textarea>
             </div>
             <button type="submit">Save Post</button>
         </form>

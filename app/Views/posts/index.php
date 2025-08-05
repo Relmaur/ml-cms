@@ -31,7 +31,7 @@ use Core\Session; ?>
         <?php foreach ($posts as $post): ?>
             <article>
                 <h2><?php echo htmlspecialchars($post->title) ?></h2>
-                <p><?php echo nl2br(htmlspecialchars($post->body)) ?></p>
+                <p><?php echo nl2br(htmlspecialchars($post->content)) ?></p>
                 <p><small><?php echo date('F j, Y', strtotime($post->created_at)); ?></small></p>
 
                 <?php if (Session::isAuthenticated()): ?>
@@ -48,3 +48,4 @@ use Core\Session; ?>
 </body>
 
 </html>
+

@@ -28,7 +28,7 @@ use Core\Session; ?>
     <?php if ($post): ?>
         <h1><?php echo htmlspecialchars($post->title); ?></h1>
         <p><small>Created on: <?php echo date('F j, Y', strtotime($post->created_at)) ?></small></p>
-        <div><?php echo nl2br(htmlspecialchars($post->body)) ?></div>
+        <div><?php echo nl2br(htmlspecialchars($post->content)) ?></div>
         <?php if (Session::isAuthenticated()): ?>
             <a href="/posts/edit/<?php echo $post->id; ?>">Edit this post</a>
             <form action="/posts/destroy/<?php echo $post->id; ?>" method="POST" style="display: inline; margin-left: 20px;">

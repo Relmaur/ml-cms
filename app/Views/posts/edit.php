@@ -43,8 +43,8 @@
                 <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" required>
             </div>
             <div>
-                <label for="body">Content</label>
-                <textarea name="body" id="body" required rows="10"><?php echo htmlspecialchars($post->body); ?></textarea>
+                <label for="content">Content</label>
+                <textarea name="content" id="content" required rows="10"><?php echo htmlspecialchars($post->content); ?></textarea>
             </div>
             <button type="submit">Update Post</button>
         </form>
