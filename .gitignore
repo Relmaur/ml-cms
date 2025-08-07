@@ -108,3 +108,6 @@ phpunit.xml
 # Miscellaneous
 .eslintcache
 .stylelintcache
+
+database/database.sqlite
+database/backups
