@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Controllers\BaseController;
+use Core\View;
+
+class {{ClassName}} extends BaseController 
+{
+    public function __construct() {
+        parent::__construct();
+        // Inject your models here
+    }
+
+    public function index() {
+        // Your logic here
+        View::render('{{ViewPath}}/index');
+    }
+}
