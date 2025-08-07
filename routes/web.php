@@ -26,5 +26,9 @@ Route::get('/login', [UsersController::class, 'login']);
 Route::post('/login', [UsersController::class, 'authenticate']);
 Route::get('/logout', [UsersController::class, 'logout']);
 
+// Pages
+Route::get('/home', [PagesController::class, 'home']);
+Route::get('/about', [PagesController::class, 'about']);
+
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index']);

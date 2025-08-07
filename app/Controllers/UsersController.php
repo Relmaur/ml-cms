@@ -12,9 +12,9 @@ class UsersController extends BaseController
 {
     private $userModel;
 
-    public function __construct()
+    public function __construct(User $userModel)
     {
-        $this->userModel = new User();
+        $this->userModel = $userModel;
     }
 
     // Registration

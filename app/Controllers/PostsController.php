@@ -9,14 +9,13 @@ use Core\View;
 
 class PostsController extends BaseController
 {
-    private $postModel;
+    protected $postModel;
 
-    public function __construct()
+    public function __construct(Post $postModel)
     {
         // To be able to access requireAuth middleware
         parent::__construct();
-
-        $this->postModel = new Post();
+        $this->postModel = $postModel;
     }
 
     /**

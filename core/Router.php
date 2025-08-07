@@ -7,6 +7,13 @@ use Core\View;
 
 class Router
 {
+    protected $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
     public function dispatch()
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -31,7 +38,8 @@ class Router
 
                     if (class_exists($controllerName) && method_exists($controllerName, $methodName)) {
 
-                        $controllerInstance = new $controllerName();
+                        $controllerInstance = $this->container->resolve($controllerName);
+
                         call_user_func_array([$controllerInstance, $methodName], $matches);
                         return;
                     }
