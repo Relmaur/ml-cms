@@ -12,6 +12,7 @@ $container = require_once '../bootstrap.php';
 Session::start();
 
 require_once '../routes/web.php';
+require_once '../routes/api.php';
 
 // Dispatch the router
 $router = new Router($container);

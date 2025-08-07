@@ -1,12 +1,19 @@
 <?php
 
 use Core\Container;
+
+// Models
 use App\Models\Post;
 use App\Models\User;
+
+// Controllers
 use App\Controllers\PostsController;
 use App\Controllers\UsersController;
 use App\Controllers\DashboardController;
 use App\Controllers\PagesController;
+
+// Api
+use App\Controllers\Api\PostApiController;
 
 $container = new Container();
 
@@ -27,6 +34,10 @@ $container->bind(DashboardController::class, function () use ($container) {
 });
 $container->bind(PagesController::class, function () use ($container) {
     return new PagesController();
+});
+
+$container->bind(PostApiController::class, function () use ($container) {
+    return new PostApiController($container->resolve(Post::class));
 });
 
 // We can return the container to be used by other parts of the app
