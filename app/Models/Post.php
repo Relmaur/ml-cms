@@ -47,12 +47,13 @@ class Post
      */
     public function createPost($data)
     {
-        $this->db->query("INSERT INTO posts (title, content, author_id) VALUES (:title, :content, :author_id)");
+        $this->db->query("INSERT INTO posts (title, content, author_id, image_path) VALUES (:title, :content, :author_id, :image_path)");
 
         // Bind values
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':content', $data['content']);
         $this->db->bind(':author_id', $data['author_id']);
+        $this->db->bind(':image_path', $data['image_path']);
 
         // Execute
         if ($this->db->execute()) {
@@ -67,12 +68,13 @@ class Post
      */
     public function updatePost($data)
     {
-        $this->db->query("UPDATE posts SET title = :title, content = :content WHERE id = :id");
+        $this->db->query("UPDATE posts SET title = :title, content = :content, image_path = :image_path WHERE id = :id");
 
         // Bind values
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':content', $data['content']);
+        $this->db->bind(':image_path',  $data['image_path']);
 
         // Execute
         if ($this->db->execute()) {

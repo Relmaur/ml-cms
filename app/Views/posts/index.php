@@ -10,6 +10,11 @@ use Core\Session; ?>
 
 <?php foreach ($posts as $post): ?>
     <article>
+        
+        <?php if ($post->image_path): ?>
+            <img src="<?php echo htmlspecialchars($post->image_path); ?>" alt="<?php echo htmlspecialchars($post->image_path) ?>">
+        <?php endif; ?>
+
         <h2><?php echo htmlspecialchars($post->title) ?></h2>
         <p><?php echo nl2br(htmlspecialchars($post->content)) ?></p>
         <p><small><?php echo date('F j, Y', strtotime($post->created_at)); ?></small></p>

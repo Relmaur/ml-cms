@@ -28,7 +28,7 @@
             margin-bottom: 20px;
             border: 1px solid transparent;
             border-radius: 4px;
-            
+
             /* position: relative;
             animation-name: fade-left;
             animation-delay: 3s;
@@ -93,6 +93,11 @@
 
         main hr:last-child {
             display: none;
+        }
+
+        img {
+            width: 100%;
+            max-width: 300px;
         }
     </style>
 </head>

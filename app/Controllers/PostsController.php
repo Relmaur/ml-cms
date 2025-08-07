@@ -80,10 +80,42 @@ class PostsController extends BaseController
 
         // Basic validation
         if (isset($_POST['title']) && isset($_POST['content']) && !empty($_POST['title']) && !empty($_POST['content'])) {
+
+            // Image handling
+            $imagePath = null;
+            // Check if an image was uploaded
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $image = $_FILES['image'];
+
+                // File validation
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($image['type'], $allowedTypes)) {
+                    die("Invalid file type. Please upload a JPG, PNG, or GIF");
+                }
+
+                if ($image['size'] > 2000000) { // 2MB limit
+                    die("File is too large. Maximum size is 2MB.");
+                }
+
+                // Sanitize filename and create a unique name
+                $name = pathinfo($image['name'], PATHINFO_FILENAME);
+                $extension = pathinfo($image['name'], PATHINFO_EXTENSION);
+                $safeName = preg_replace('/[^A-Za-z0-9_-]/', '', $name);
+                $uniqueName = $safeName . '_' . time() . '.' . $extension;
+
+                $uploadDir = __DIR__ .  "/../../public/uploads/";
+                $imagePath = '/uploads/' . $uniqueName;
+
+                if (!move_uploaded_file($image['tmp_name'], $uploadDir . $uniqueName)) {
+                    die("Failed to move uploaded file.");
+                }
+            }
+
             $data = [
                 'title' => trim($_POST['title']),
                 'content' => trim($_POST['content']),
                 'author_id' => Session::get('user_id'),
+                'image_path' => $imagePath,
             ];
 
             // Sanitize data before inserting (!importing)
@@ -148,10 +180,42 @@ class PostsController extends BaseController
 
         // Basic validation TODO: Strengthen this
         if (isset($_POST['title']) && isset($_POST['content']) && !empty($_POST['title']) && !empty($_POST['content'])) {
+
+            $imagePath = $this->postModel->getPostById($id)->image_path;
+            
+            // Check if an image was uploaded
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $image = $_FILES['image'];
+
+                // File validation
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($image['type'], $allowedTypes)) {
+                    die("Invalid file type. Please upload a JPG, PNG, or GIF");
+                }
+
+                if ($image['size'] > 2000000) { // 2MB limit
+                    die("File is too large. Maximum size is 2MB.");
+                }
+
+                // Sanitize filename and create a unique name
+                $name = pathinfo($image['name'], PATHINFO_FILENAME);
+                $extension = pathinfo($image['name'], PATHINFO_EXTENSION);
+                $safeName = preg_replace('/[^A-Za-z0-9_-]/', '', $name);
+                $uniqueName = $safeName . '_' . time() . '.' . $extension;
+
+                $uploadDir = __DIR__ .  "/../../public/uploads/";
+                $imagePath = '/uploads/' . $uniqueName;
+
+                if (!move_uploaded_file($image['tmp_name'], $uploadDir . $uniqueName)) {
+                    die("Failed to move uploaded file.");
+                }
+            }
+
             $data = [
                 'id' => $id,
                 'title' => trim($_POST['title']),
-                'content' => trim($_POST['content'])
+                'content' => trim($_POST['content']),
+                'image_path' => $imagePath,
             ];
 
             // Sanitize data

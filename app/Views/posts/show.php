@@ -3,6 +3,11 @@
 use Core\Session; ?>
 <?php if ($post): ?>
     <h1><?php echo htmlspecialchars($post->title); ?></h1>
+
+    <?php if ($post->image_path): ?>
+        <img src="<?php echo htmlspecialchars($post->image_path); ?>" alt="<?php echo htmlspecialchars($post->title) ?>">
+    <?php endif; ?>
+    
     <p><small>Created on: <?php echo date('F j, Y', strtotime($post->created_at)) ?></small> | <small>By: <strong><?php echo htmlspecialchars($post->author_name ?? 'Unknown') ?></strong></small></p>
     <div><?php echo nl2br(htmlspecialchars($post->content)) ?></div>
     <?php if (Session::isAuthenticated()): ?>
