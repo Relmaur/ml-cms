@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use Core\Database;
+use Core\Console;
 
 $db = Database::getInstance()->getPdo();
 
@@ -11,8 +12,8 @@ $stmt = $db->query("SELECT MAX(batch) FROM migrations");
 $lastBatch = $stmt->fetchColumn();
 
 if (!$lastBatch) {
-    echo "No migrations to roll back.\n";
-    exit;
+    Console::error("No migrations to roll back.");
+    exit();
 }
 
 // Get all migrations from the last batch
@@ -23,7 +24,7 @@ $migrationsToRollback = $stmt->fetchAll(PDO::FETCH_COLUMN);
 // Roll them back
 foreach ($migrationsToRollback as $migrationFile) {
     try {
-        echo "Rolling back: {$migrationFile}";
+        Console::info("Rolling back: {$migrationFile}");
 
         require_once 'database/migrations/' . $migrationFile;
         $className = substr(pathinfo($migrationFile, PATHINFO_FILENAME), 18);
@@ -35,14 +36,14 @@ foreach ($migrationsToRollback as $migrationFile) {
             $deleteStmt = $db->prepare("DELETE FROM migrations WHERE migration = ?");
             $deleteStmt->execute([$migrationFile]);
 
-            echo "Success: Rolled back {$migrationFile}\n";
+            Console::success("Success: Rolled back {$migrationFile}");
         } else {
             throw new Exception("Class {$className} not found in {$migrationFile}");
         }
     } catch (Exception $e) {
-        echo "Error rolling back migration {$migrationFile}: " . $e->getMessage() . "\n";
+        Console::error("Error rolling back migration {$migrationFile}: " . $e->getMessage());
         exit(1);
     }
 }
 
-echo "Rollback completed successfully";
+Console::success("Rollback completed successfully");

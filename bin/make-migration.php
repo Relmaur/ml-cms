@@ -1,7 +1,12 @@
 <?php
 
+require_once 'vendor/autoload.php';
+
+use Core\Console;
+
 if ($argc < 2) {
-    die("Usage: php make-migration <migration_name>\n");
+    Console::error("Usage: php make-migration <migration_name>");
+    exit(1);
 }
 
 $className = $argv[1];
@@ -32,7 +37,8 @@ class {$className} implements MigrationInterface {
 EOD;
 
 if (file_put_contents($filename, $stub) == false) {
-    die("Error creating migration file.\n");
+    Console::error("Error creating migration file.");
+    exit(1);
 }
 
-echo "Created migration: {$filename}\n";
+Console::success("Created migration: {$filename}");

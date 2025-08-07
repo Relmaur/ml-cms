@@ -1,7 +1,12 @@
 <?php
+require_once 'vendor/autoload.php';
+
+use Core\Console;
 
 if ($argc < 2) {
-    die("Usage: php bin/make-controller.php <ControllerName>\nExample: php bin/make-controller.php ProductsController\n");
+    Console::error("Usage: php bin/make-controller.php <ControllerName>");
+    Console::info("Example: php bin/make-controller.php ProductsController");
+    exit(1);
 }
 
 $className = $argv[1];
@@ -15,13 +20,15 @@ $stubPath = 'stubs/controller.stub';
 $controllerPath = "app/Controllers/{$className}.php";
 
 if (file_exists($controllerPath)) {
-    die("Error: Controller '{$className}' already exists.\n");
+    Console::error("Error: Controller '{$className}' already exists.");
+    exit(1);
 }
 
 // Read the stub file
 $stub = file_get_contents($stubPath);
 if ($stub == false) {
-    die("Error: Unable to read stub file at {$stubPath}");
+    Console::error("Error: Unable to read stub file at {$stubPath}");
+    exit(1);
 }
 
 // Determine the view path from the controller name (e.g., ProductsController -> products)
@@ -33,8 +40,9 @@ $stub = str_replace('{{ViewPath}}', $viewPath, $stub);
 
 // Write the new controller file
 if (file_put_contents($controllerPath, $stub) == false) {
-    die("Error: Unable to create controller file at {$controllerPath}\n");
+    Console::error("Error: Unable to create controller file at {$controllerPath}");
+    exit(1);
 }
 
-echo "Controller created successfully: {$controllerPath}\n";
-echo "Remember to add the binding to bootstrap.php!";
+Console::success("Controller created successfully: {$controllerPath}");
+Console::warning("Remember to add the binding to bootstrap.php!");

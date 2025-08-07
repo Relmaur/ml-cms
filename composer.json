@@ -17,6 +17,7 @@
     "scripts": {
         "make:migration": "php bin/make-migration.php",
         "make:controller": "php bin/make-controller.php",
+        "make:model": "php bin/make-model.php",
         "migrate:rollback": "php bin/migrate-rollback.php",
         "migrate": "php bin/migrate.php"
     }
