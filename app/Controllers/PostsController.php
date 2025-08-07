@@ -41,9 +41,11 @@ class PostsController extends BaseController
             Cache::put($cacheKey, $posts, 10);
         }
 
+        $pageTitle = $posts ? 'All Posts' : 'No Posts Found';
+
         View::render('posts/index', [
             'posts' => $posts,
-            'pageTitle' => 'All Posts'
+            'pageTitle' => $pageTitle
         ]);
     }
 
@@ -58,12 +60,12 @@ class PostsController extends BaseController
 
         $post = Cache::get($cacheKey);
 
-        
+
         if (!$post) {
             $post = $this->postModel->getPostById($id);
             Cache::put($cacheKey, $post, 10);
         }
-        
+
         $pageTitle = $post ? $post->title : 'Post Not Found';
 
         View::render('posts/show', [
