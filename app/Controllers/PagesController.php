@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Core\View;
+use Core\Http\HtmlResponse;
 
 class PagesController
 {
@@ -12,7 +13,7 @@ class PagesController
         $pageTitle = "Welcome to the Homepage!";
         $pageContent = "This is the content of the homepage, loaded from the PagesController.";
 
-        View::render('pages/home', [
+        return View::render('pages/home', [
             'pageTitle' => $pageTitle,
             'pageContent' => $pageContent
         ]);
@@ -23,7 +24,7 @@ class PagesController
         $pageTitle = "About Us";
         $pageContent = "This page contains information about our application.";
 
-        View::render('pages/about', [
+        return View::render('pages/about', [
             'pageTitle' => $pageTitle,
             'pageContent' => $pageContent
         ]);
