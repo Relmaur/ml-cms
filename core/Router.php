@@ -40,15 +40,15 @@ class Router
 
                         $controllerInstance = $this->container->resolve($controllerName);
 
-                        call_user_func_array([$controllerInstance, $methodName], $matches);
-                        return;
+                        $response = call_user_func_array([$controllerInstance, $methodName], $matches);
+                        return $response;
                     }
+                    
+                    // Handle 404 Not Found
+                    View::render('errors/404', ['pageTitle' => 'Not Found']);
                 }
             }
         }
-        // Handle 404 Not Found
-        http_response_code(404);
-        View::render('errors/404', ['pageTitle' => 'Not Found']);
     }
 
     private function convertRouteToRegex($uri)

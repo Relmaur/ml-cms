@@ -3,13 +3,15 @@
 namespace App\Controllers;
 
 use Core\View;
+use Core\Http\RedirectResponse;
+
 use App\Controllers\BaseController;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
-        View::render('dashboard/home', [
+        return View::render('dashboard/home', [
             'pageTitle' => 'ML CMS | Dashboard'
         ], 'dashboard');
     }

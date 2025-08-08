@@ -7,6 +7,8 @@ use App\Models\Post;
 use Core\Session;
 use Core\View;
 use Core\Cache;
+use Core\Http\HtmlResponse;
+use Core\Http\RedirectResponse;
 
 class PostsController extends BaseController
 {
@@ -43,7 +45,7 @@ class PostsController extends BaseController
 
         $pageTitle = $posts ? 'All Posts' : 'No Posts Found';
 
-        View::render('posts/index', [
+        return View::render('posts/index', [
             'posts' => $posts,
             'pageTitle' => $pageTitle
         ]);
@@ -68,7 +70,7 @@ class PostsController extends BaseController
 
         $pageTitle = $post ? $post->title : 'Post Not Found';
 
-        View::render('posts/show', [
+        return View::render('posts/show', [
             'post' => $post,
             'pageTitle' => $pageTitle
         ]);
@@ -88,7 +90,7 @@ class PostsController extends BaseController
 
         $pageTitle = 'Create New Post';
 
-        View::render('posts/create', [
+        return View::render('posts/create', [
             'pageTitle' => $pageTitle
         ]);
     }
@@ -150,19 +152,14 @@ class PostsController extends BaseController
                 // Cache::forget('posts.all');
                 Session::flash('success', 'Post created successfully!');
                 // Redirect to the blog index on success
-                header('Location: /posts');
-                exit();
-            } else {
-                // Handle error
-                die('Something went wrong.');
+                return new RedirectResponse('/posts');
             }
         } else {
 
             Session::flash('error', 'There was an error creating the post');
             // If validation fails, redirect back to create form
             // In a prod environment, you'd show an error message.
-            header('Location: /posts/create');
-            exit();
+            return new RedirectResponse('/posts/create');
         }
     }
 
@@ -187,7 +184,7 @@ class PostsController extends BaseController
 
         $pageTitle = 'Edit Post';
 
-        View::render('posts/edit', [
+        return View::render('posts/edit', [
             'pageTitle' => $pageTitle,
             'post' => $post
         ]);
@@ -252,15 +249,11 @@ class PostsController extends BaseController
                 // Cache::forget('post.' . $id);
                 Session::flash('success', 'Post updated successfully');
                 // Redirect to the post's page on success
-                header('Location: /posts/' . $id);
-                exit();
-            } else {
-                die('Something went wrong.');
+                return new RedirectResponse('/posts/' . $id);
             }
         } else {
             // If validation fails, redirect back to edit form
-            header('Location: /posts/' . $id . 'edit/');
-            exit();
+            return new RedirectResponse('/posts/' . $id . '/edit');
         }
     }
 
@@ -279,10 +272,7 @@ class PostsController extends BaseController
             // Cache::forget('post.' . $id);
             Session::flash('success', 'Post deleted successfully');
             // Redirect to the blog index on success
-            header('Location: /posts');
-            exit();
-        } else {
-            die('Something went worng.');
+            return new RedirectResponse('/posts');
         }
     }
 }

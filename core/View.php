@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Http\HtmlResponse;
+
 class View
 {
     /**
@@ -31,8 +33,15 @@ class View
 
             // Require the main layout, which will use the $content variable
             require_once __DIR__ . "/../app/Views/layouts/" . $layout . ".php";
-        } else {
-            die("View not found: " . $file);
+            $layoutContent = ob_get_clean();
+
+            return new HtmlResponse($layoutContent);
         }
+
+        // Return a 404 response if view not found
+        ob_start();
+        require __DIR__ . "/../app/Views/errors/404.php";
+        $content = ob_get_clean();
+        return new HtmlResponse($content);
     }
 }

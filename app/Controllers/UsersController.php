@@ -6,6 +6,7 @@ use Core\Session;
 use Core\View;
 use Core\Validator;
 use Core\EventDispatcher;
+use Core\Http\RedirectResponse;
 
 use App\Controllers\BaseController;
 use App\Models\User;
@@ -29,7 +30,7 @@ class UsersController extends BaseController
     {
         $pageTitle = 'Register';
 
-        View::render('users/register', [
+        return View::render('users/register', [
             'pageTitle' => $pageTitle
         ]);
     }
@@ -54,8 +55,7 @@ class UsersController extends BaseController
             // If validation fails, redirect back with errors
             Session::flash('errors', $validator->getErrors());
             Session::flash('old_input', $_POST); // Send back the old input to re-populate the form
-            header('Location: /register');
-            exit();
+            return new RedirectResponse('/register');
         }
 
         $data = [
@@ -72,13 +72,10 @@ class UsersController extends BaseController
             // Dispatch the event!
             $this->dispatcher->dispatch(new UserRegistered($newUser));
 
-            Session::flash('sucess', 'Thank you for registering!');
+            Session::flash('success', 'Thank you for registering!');
 
-            // Redirect to login page aftersuccessful registration
-            header('Location: /login');
-            exit();
-        } else {
-            die('Something went wrong during registration');
+            // Redirect to login page after successful registration
+            return new RedirectResponse('/login');
         }
     }
 
@@ -88,7 +85,7 @@ class UsersController extends BaseController
     {
         $pageTitle = 'Login';
 
-        View::render('users/login', [
+        return View::render('users/login', [
             'pageTitle' => $pageTitle
         ]);
     }
@@ -106,8 +103,7 @@ class UsersController extends BaseController
         if ($validator->fails()) {
             Session::flash('errors', $validator->getErrors());
             Session::flash('old_input', $_POST);
-            header('Location: /login');
-            exit();
+            return new RedirectResponse('/login');
         }
 
         $email = $_POST['email'];
@@ -123,12 +119,10 @@ class UsersController extends BaseController
             Session::flash('success', 'Welcome Back, ' . $user->name . '!');
 
             // Redirect to homepage or dashboard
-            header('Location: /dashboard');
-            exit();
+            return new RedirectResponse('/dashboard');
         } else {
             Session::flash('error', 'Invalid Credentials');
-            header('Location: /login');
-            exit();
+            return new RedirectResponse('/login');
         }
     }
 
@@ -137,7 +131,6 @@ class UsersController extends BaseController
     public function logout()
     {
         Session::destroy();
-        header('Location: /login');
-        exit();
+        return new RedirectResponse('/login');
     }
 }
