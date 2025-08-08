@@ -16,6 +16,7 @@ class Cache
     public static function get($key)
     {
         $file = self::$cacheDir . md5($key) . '.cache';
+
         if (!file_exists($file)) {
             return false;
         }
@@ -23,12 +24,12 @@ class Cache
         $data = unserialize(file_get_contents($file));
 
         // Check if the cache has expired
-        if (time() < $data['expires']) {
+        if (time() > $data['expires']) {
             self::forget($key);
             return false;
         }
 
-        return $data;
+        return $data['data'];
     }
 
     /**
@@ -48,11 +49,16 @@ class Cache
             'data' => $value,
         ];
 
+        // Ensure the cache directory exists, if not, create it.
+        if (!is_dir(self::$cacheDir)) {
+            mkdir(self::$cacheDir, 0755, true);
+        }
+
         file_put_contents($file, serialize($data));
     }
 
     /**
-     * Remove an item
+     * Remove an item from the cache
      * 
      * @param string $key The unique key for the cache item.
      */
