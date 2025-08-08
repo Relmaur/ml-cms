@@ -28,20 +28,18 @@ class PostsController extends BaseController
      */
     public function index()
     {
-        // $cacheKey = 'posts.all';
+        $cacheKey = 'posts.all';
 
-        // // Try to get the posts from the cache first
-        // $posts = Cache::get($cacheKey);
+        // Try to get the posts from the cache first
+        $posts = Cache::get($cacheKey);
 
-        // if (!$posts) {
-        //     // If not in cache, get from the database
-        //     $posts = $this->postModel->getAllPosts();
+        if (!$posts) {
+            // If not in cache, get from the database
+            $posts = $this->postModel->getAllPosts();
 
-        //     // Store the result in the cache for next time (e.g., for 10 minutes)
-        //     Cache::put($cacheKey, $posts, 10);
-        // }
-        
-        $posts = $this->postModel->getAllPosts();
+            // Store the result in the cache for next time (e.g., for 10 minutes)
+            Cache::put($cacheKey, $posts, 10);
+        }
 
         $pageTitle = $posts ? 'All Posts' : 'No Posts Found';
 
