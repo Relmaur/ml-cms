@@ -21,7 +21,8 @@ class Database
         } else {
 
             // Use the regular file-based database for development
-            $config = require_once __DIR__ . '/../config/database.php';
+            $config = require __DIR__ . '/../config/database.php';
+            
             // DSN for SQLite
             $dsn = "sqlite:" . $config['path'];
         }

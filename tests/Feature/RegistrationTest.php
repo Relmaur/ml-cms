@@ -14,6 +14,8 @@ class RegistrationTest extends BaseFeatureTestCase
     public function can_register_an_account()
     {
 
+        echo "DEBUG: Entered can_register_an_account() test.\n";
+
         // Resolve the controller from the fully configured container
         $controller = $this->container->resolve(UsersController::class);
 
