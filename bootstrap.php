@@ -1,6 +1,7 @@
 <?php
 
 use Core\Container;
+use Core\EventDispatcher;
 
 // Models
 use App\Models\Post;
@@ -11,11 +12,29 @@ use App\Controllers\PostsController;
 use App\Controllers\UsersController;
 use App\Controllers\DashboardController;
 use App\Controllers\PagesController;
-
 // Api
 use App\Controllers\Api\PostApiController;
 
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeEmailListener;
+
+
 $container = new Container();
+$dispatcher = new EventDispatcher();
+
+// Register the dispatcher in the container so we can inject it later
+$container->bind(EventDispatcher::class, fn() => $dispatcher);
+
+/**
+ * Event / Listener Bindings
+ */
+// You can add more listeners here for the same event:
+$dispatcher->listen(UserRegistered::class, SendWelcomeEmailListener::class);
+// $dispatcher->listen(UserRegistered::class, AssignDefaultRoleListener::class);
+
+/**
+ * Web Route Bindings
+ */
 
 // Bind the recipes for creating our models
 $container->bind(Post::class, fn() => new Post());
@@ -27,7 +46,9 @@ $container->bind(PostsController::class, function () use ($container) {
     return new PostsController($container->resolve(Post::class));
 });
 $container->bind(UsersController::class, function () use ($container) {
-    return new UsersController($container->resolve(User::class));
+    return new UsersController(
+        $container->resolve(User::class), 
+        $container->resolve(EventDispatcher::class));
 });
 $container->bind(DashboardController::class, function () use ($container) {
     return new DashboardController();

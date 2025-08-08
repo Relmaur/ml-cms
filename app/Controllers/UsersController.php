@@ -2,19 +2,25 @@
 
 namespace App\Controllers;
 
-use \App\Controllers\BaseController;
-use App\Models\User;
 use Core\Session;
 use Core\View;
 use Core\Validator;
+use Core\EventDispatcher;
+
+use App\Controllers\BaseController;
+use App\Models\User;
+use App\Events\UserRegistered;
 
 class UsersController extends BaseController
 {
     private $userModel;
+    private $dispatcher;
 
-    public function __construct(User $userModel)
+    // Inject the dispatcher via the constructor
+    public function __construct(User $userModel, EventDispatcher $dispatcher)
     {
         $this->userModel = $userModel;
+        $this->dispatcher = $dispatcher;
     }
 
     // Registration
@@ -59,7 +65,15 @@ class UsersController extends BaseController
         ];
 
         if ($this->userModel->register($data)) {
+
+            // Get the newly created user data (we need the ID)
+            $newUser = $this->userModel->findByEmail($data['email']);
+
+            // Dispatch the event!
+            $this->dispatcher->dispatch(new UserRegistered($newUser));
+
             Session::flash('sucess', 'Thank you for registering!');
+
             // Redirect to login page aftersuccessful registration
             header('Location: /login');
             exit();
