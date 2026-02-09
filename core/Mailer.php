@@ -21,7 +21,7 @@ class Mailer
     public function send(string $to, string $subject, string $htmlBody)
     {
         $email = (new Email())
-            ->from('no-reply@ml-cms.com')
+            ->from('no-reply@riven.com')
             ->to($to)
             ->subject($subject)
             ->html($htmlBody);

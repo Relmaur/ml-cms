@@ -12,7 +12,7 @@ class DashboardController extends BaseController
     public function index()
     {
         return View::render('dashboard/home', [
-            'pageTitle' => 'ML CMS | Dashboard'
+            'pageTitle' => 'Riven | Dashboard'
         ], 'dashboard');
     }
 }

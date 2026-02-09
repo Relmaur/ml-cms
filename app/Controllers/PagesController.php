@@ -10,7 +10,7 @@ class PagesController
 
     public function home()
     {
-        $pageTitle = "Welcome to the Homepage!";
+        $pageTitle = "Welcome to the Riven";
         $pageContent = "This is the content of the homepage, loaded from the PagesController.";
 
         return View::render('pages/home', [

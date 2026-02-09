@@ -1,6 +1,6 @@
-# ML-CMS Framework — Crash Course
+# Riven Framework — Crash Course
 
-A hands-on guide to building web applications with ML-CMS. This walks you through every core concept with real examples from the framework itself.
+A hands-on guide to building web applications with Riven. This walks you through every core concept with real examples from the framework itself.
 
 ---
 
@@ -237,7 +237,7 @@ Layouts are full HTML documents that wrap your view content. The view's output i
 <!DOCTYPE html>
 <html>
 <head>
-    <title><?= $pageTitle ?? 'ML-CMS' ?></title>
+    <title><?= $pageTitle ?? 'Riven' ?></title>
 </head>
 <body>
     <?php require_once __DIR__ . '/../partials/header.php'; ?>
@@ -695,12 +695,12 @@ use Core\Mailer;
 $mailer = new Mailer();
 $mailer->send(
     'user@example.com',        // To
-    'Welcome to ML-CMS',       // Subject
+    'Welcome to Riven',       // Subject
     '<h1>Hello!</h1>'          // HTML body
 );
 ```
 
-The "from" address defaults to `no-reply@ml-cms.com`.
+The "from" address defaults to `no-reply@riven.com`.
 
 ---
 
@@ -931,7 +931,7 @@ composer test
 ## 18. Project Structure Reference
 
 ```
-ml-cms/
+riven/
 ├── public/
 │   └── index.php              # Entry point (front controller)
 ├── bootstrap.php              # Container setup & dependency wiring

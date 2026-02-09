@@ -29,7 +29,7 @@ class UsersController extends BaseController
     // users/register
     public function register()
     {
-        $pageTitle = 'Register';
+        $pageTitle = 'Riven | Register';
 
         return View::render('users/register', [
             'pageTitle' => $pageTitle
@@ -84,7 +84,7 @@ class UsersController extends BaseController
     // users/login
     public function login()
     {
-        $pageTitle = 'Login';
+        $pageTitle = 'Riven | Login';
 
         return View::render('users/login', [
             'pageTitle' => $pageTitle
