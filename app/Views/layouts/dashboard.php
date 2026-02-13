@@ -99,21 +99,39 @@
 
 <body>
 
-    <?php if ($successMessage = Core\Session::getFlash('success')): ?>
+    <nav>
+        <ul>
+            <li><a href="<?php echo route('home'); ?>">Home</a></li>
+            <li><a href="<?php echo route('posts.index'); ?>">Posts</a></li>
+            <li><a href="<?php echo route('pages.about'); ?>">About</a></li>
 
-        <div class="alert alert-success"><?php echo htmlspecialchars($successMessage) ?></div>
-
-    <?php elseif ($errorMessage = Core\Session::getFlash('error')): ?>
-
-        <div class="alert alert-error"><?php echo htmlspecialchars($errorMessage) ?></div>
-
-    <?php endif; ?>
-
-    <?php // require_once '../app/Views/partials/header.php'; 
-    ?>
+            <?php if (Core\Session::isAuthenticated()): ?>
+                <li><a href="<?php echo route('dashboard'); ?>">Dashboard</a></li>
+                <li><a href="<?php echo route('logout'); ?>">Logout (<?php echo e(Core\Session::get('user_name')); ?>)</a></li>
+            <?php else: ?>
+                <li><a href="<?php echo route('login'); ?>">Login</a></li>
+                <li><a href="<?php echo route('register'); ?>">Register</a></li>
+            <?php endif; ?>
+        </ul>
+    </nav>
 
     <main>
+
+        <?php if ($successMessage = Core\Session::getFlash('success')): ?>
+
+            <div class="alert alert-success"><?php echo htmlspecialchars($successMessage) ?></div>
+
+        <?php elseif ($errorMessage = Core\Session::getFlash('error')): ?>
+
+            <div class="alert alert-error"><?php echo htmlspecialchars($errorMessage) ?></div>
+
+        <?php endif; ?>
+
+        <?php // require_once '../app/Views/partials/header.php'; 
+        ?>
+
         <?php echo $content; ?>
+
     </main>
 
     <?php // require_once '../app/Views/partials/footer.php'; 

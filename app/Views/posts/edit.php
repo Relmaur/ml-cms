@@ -1,8 +1,8 @@
 <h1>Edit Post</h1>
-<form action="/posts/<?php echo $post->id; ?>" method="POST" enctype="multipart/form-data">
+<form action="<?php echo route('posts.update', ['id' => $post->id]); ?>" method="POST" enctype="multipart/form-data">
     <?php echo csrf_field(); ?>
     <?php echo method_field('PUT'); ?>
-    
+
     <div>
         <label for="title">Title</label>
         <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" required>
@@ -20,4 +20,4 @@
     </div>
     <button type="submit">Update Post</button>
 </form>
-<a href="/posts/<?php echo $post->id ?>">Cancel</a>
+<a href="<?php echo route('posts.show', ['id' => $post->id]); ?>">Cancel</a>

@@ -1,7 +1,7 @@
 <h1>Create Post</h1>
-<form action="/posts" method="POST" enctype="multipart/form-data">
+<form action="<?php echo route('posts.store'); ?>" method="POST" enctype="multipart/form-data">
     <?php echo csrf_field(); ?>
-    
+
     <div>
         <label for="title">Title</label>
         <input type="text" id="title" name="title" required>
@@ -17,4 +17,4 @@
     <button type="submit">Save Post</button>
 </form>
 
-<a href="/posts">Back to Posts</a>
+<a href="<?php echo route('posts.index'); ?>">Back to Posts</a>

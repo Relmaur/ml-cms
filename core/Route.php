@@ -8,7 +8,24 @@ use Closure;
 
 class Route
 {
+    /**
+     * All registered routes
+     * Each route has: method, uri, action, middleware, name
+     */
     protected static $routes = [];
+
+    /**
+     * Named routes registry
+     * Maps route names to their index in the $routes array
+     * 
+     * Example ['posts.show' => 3, 'posts.edit' => 4]
+     * This allows fast lookup: "What's the URI for 'posts.show'?"
+     */
+    protected static $namedRoutes = [];
+
+    /**
+     * Stack of route groups (for nesting groups)
+     */
     protected static $groupStack = [];
 
     /**
@@ -106,7 +123,7 @@ class Route
      *  Route::get('/dashboard', [AdminController::class, 'index']);
      * })
      */
-    public static function group(array $attributes, Closure $callback)
+    public static function group(array $attributes, Closure $callback): void
     {
 
         // Push attributes onto the group stack
@@ -122,7 +139,7 @@ class Route
     /**
      * Add a route and return a RouteRegistrar for chainging
      */
-    protected static function add($method, $uri, $action)
+    protected static function add($method, $uri, $action): RouteRegistrar
     {
 
         // Merge group attributes
@@ -138,7 +155,8 @@ class Route
             'method' => $method,
             'uri' => '/' . trim($uri, '/'),
             'action' => $action,
-            'middleware' => $attributes['middleware'] ?? []
+            'middleware' => $attributes['middleware'] ?? [],
+            'name' => null // Routes can have a name
         ];
 
         self::$routes[] = $route;
@@ -148,11 +166,11 @@ class Route
     }
 
     /**
-     * Merge attributes from the group stack}
+     * Merge attributes from the group stack
      * 
      * When routes are nested in groups, this combines all the group attributes
      */
-    protected static function mergeGroupAttributes()
+    protected static function mergeGroupAttributes(): array
     {
         $attributes = [
             'prefix' => '',
@@ -177,7 +195,7 @@ class Route
     /**
      * Add a middleware to a specific route (called by RouteRegistrar)
      */
-    public static function addMiddlewareToRoute($index, $middleware)
+    public static function addMiddlewareToRoute($index, $middleware): void
     {
         if (!is_array($middleware)) {
             $middleware = [$middleware];
@@ -190,10 +208,70 @@ class Route
     }
 
     /**
+     * Add a name to a specific route (called by RoutesRegistrar)
+     * 
+     * When you call ->name('posts.show'), this method:
+     * 1. Stores the name in the route definition
+     * 2. Adds the name to the named routes registry for fast lookup
+     * 
+     * @param int $index The route index in the $routes array
+     * @param string $name The route name
+     * @throws \Exception If the name is already taken
+     */
+    public static function addNameToRoute($index, $name): void
+    {
+
+        // Check if name is already used
+        if (isset(self::$namedRoutes[$name])) {
+            throw new \Exception("Route name '{$name}' is already in use.");
+        }
+
+        // Store the name in the route definition
+        self::$routes[$index]['name'] = $name;
+
+        // Add to the named routes registry
+        self::$namedRoutes[$name] = $index;
+    }
+
+    /**
+     * Get a route by its name
+     * 
+     * This is used by the route() helper function to look up routes
+     * 
+     * @param string $name The route name
+     * @return array|null The route definition or null if not found
+     */
+    public static function getByName($name): ?array
+    {
+        if (!isset(self::$namedRoutes[$name])) {
+            return null;
+        }
+
+        $index = self::$namedRoutes[$name];
+        return self::$routes[$index];
+    }
+
+    /**
      * Get all registered routes
      */
     public static function getRoutes()
     {
         return self::$routes;
+    }
+
+    /**
+     * Get all named routes
+     * 
+     * Useful for debugging or generating route lists
+     * 
+     * @return array Array of ['name' => 'route definition']
+     */
+    public static function getNamedRoutes(): array
+    {
+        $named = [];
+        foreach (self::$namedRoutes as $name => $index) {
+            $named[$name] = self::$routes[$index];
+        }
+        return $named;
     }
 }

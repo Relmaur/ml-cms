@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php echo csrf_meta(); ?>
-    <title><?php echo htmlspecialchars($pageTitle ?? 'Riven') ?></title>
+    <title><?php echo e($pageTitle ?? 'Riven') ?></title>
     <style>
         body {
             font-family: sans-serif;
@@ -105,41 +105,47 @@
 
 <body>
 
-    <?php if ($successMessage = Core\Session::getFlash('success')): ?>
+    <nav>
+        <ul>
+            <li><a href="<?php echo route('home'); ?>">Home</a></li>
+            <li><a href="<?php echo route('posts.index'); ?>">Posts</a></li>
+            <li><a href="<?php echo route('pages.about'); ?>">About</a></li>
 
-        <div class="alert alert-success"><?php echo htmlspecialchars($successMessage) ?></div>
-
-    <?php elseif ($errorMessage = Core\Session::getFlash('error')): ?>
-
-        <div class="alert alert-error"><?php echo htmlspecialchars($errorMessage) ?></div>
-
-    <?php endif; ?>
-
-    <?php require_once '../app/Views/partials/header.php'; ?>
+            <?php if (Core\Session::isAuthenticated()): ?>
+                <li><a href="<?php echo route('dashboard'); ?>">Dashboard</a></li>
+                <li><a href="<?php echo route('logout'); ?>">Logout (<?php echo e(Core\Session::get('user_name')); ?>)</a></li>
+            <?php else: ?>
+                <li><a href="<?php echo route('login'); ?>">Login</a></li>
+                <li><a href="<?php echo route('register'); ?>">Register</a></li>
+            <?php endif; ?>
+        </ul>
+    </nav>
 
     <main>
+        <?php
+        // Display flash messages
+        $success = Core\Session::getFlash('success');
+        $error = Core\Session::getFlash('error');
+        ?>
+
+        <?php if ($success): ?>
+            <div style="padding: 10px; margin: 10px 0; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px;">
+                <?php echo e($success); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($error): ?>
+            <div style="padding: 10px; margin: 10px 0; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px;">
+                <?php echo e($error); ?>
+            </div>
+        <?php endif; ?>
+
         <?php echo $content; ?>
     </main>
 
-    <?php require_once '../app/Views/partials/footer.php'; ?>
-
-    <script>
-        // Get the CSRF token from the meta tag
-        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
-        // Add to all AJAX requests
-        fetch('/api/posts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': token
-            },
-            body: JSON.stringify({
-                title: 'My Post',
-                content: 'Post content'
-            })
-        });
-    </script>
+    <footer>
+        <p>&copy; <?php echo date('Y'); ?> ML CMS. All rights reserved.</p>
+    </footer>
 
 </body>
 

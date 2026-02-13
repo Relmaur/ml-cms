@@ -1,6 +1,8 @@
 <?php
 
-use Core\Session; ?>
+use Core\Session;
+
+?>
 
 <h1>All Blog Posts</h1>
 
@@ -10,7 +12,7 @@ use Core\Session; ?>
 
 <?php foreach ($posts as $post): ?>
     <article>
-        
+
         <?php if ($post->image_path): ?>
             <img src="<?php echo htmlspecialchars($post->image_path); ?>" alt="<?php echo htmlspecialchars($post->image_path) ?>">
         <?php endif; ?>
@@ -20,12 +22,13 @@ use Core\Session; ?>
         <p><small><?php echo date('F j, Y', strtotime($post->created_at)); ?></small></p>
         <p><small>By: <strong><?php echo htmlspecialchars($post->author_name ?? 'Unknown') ?></strong></small></p>
 
-        <?php if (Session::isAuthenticated()): ?>
-            <p>
-                <a href="/posts/<?php echo $post->id; ?>">Read More</a> |
-                <a href="/posts/<?php echo $post->id; ?>/edit">Edit</a>
-            </p>
-        <?php endif; ?>
+        <span>
+            <a href="<?php echo route('posts.show', ['id' => $post->id]) ?>">Read More</a>
+            <?php if (Session::isAuthenticated()): ?>
+                | <a href="<?php echo route('posts.edit', ['id' => $post->id]); ?>">Edit</a>
+            <?php endif; ?>
+        </span>
+        
     </article>
     <hr>
 <?php endforeach; ?>

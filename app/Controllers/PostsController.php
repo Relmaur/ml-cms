@@ -147,14 +147,14 @@ class PostsController extends BaseController
             ];
 
             // Sanitize data before inserting (!importing)
-            $data['title'] = htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8');
-            $data['content'] = htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8');
+            $data['title'] = e($data['title'], ENT_QUOTES, 'UTF-8');
+            $data['content'] = e($data['content'], ENT_QUOTES, 'UTF-8');
 
             if ($this->postModel->createPost($data)) {
 
                 Cache::forget('posts.all');
                 Session::flash('success', 'Post created successfully!');
-                
+
                 // Redirect to the blog index on success
                 return new RedirectResponse('/posts');
             }

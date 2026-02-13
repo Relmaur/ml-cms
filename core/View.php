@@ -37,7 +37,7 @@ class View
             ob_start();
 
             // Require the main layout, which will use the $content variable
-            require_once __DIR__ . "/../app/Views/layouts/" . $layout . ".php";
+            require __DIR__ . "/../app/Views/layouts/" . $layout . ".php";
 
             // Get the complete layout content
             $layoutContent = ob_get_clean();

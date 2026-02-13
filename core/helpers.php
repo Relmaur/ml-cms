@@ -98,3 +98,56 @@ if (!function_exists('method_field')) {
         return '<input type="hidden" name="_method" value="' . strtoupper($method) . '">';
     }
 }
+
+if (!function_exists('route')) {
+    /**
+     * Generate a URL for a named route
+     * 
+     * This is probably the most commonly used helper in the entire framework.
+     * It allows you to generate URLs without hardcoding paths.
+     * 
+     * Basic usage:
+     * route('posts.index')
+     * route('posts.show', ['id' => 5])
+     * route('posts.edit', ['id' => 5])
+     * 
+     * With multiple parameters:
+     * route('users.posts.show', ['userId' =>1, 'postId' => 5]) -> /users/1/posts/5
+     * 
+     * Absolute URLs (with domain):
+     * route('posts.show', ['id' => 5], true) -> http://example.com/posts/5
+     * 
+     * @param string $name The route name
+     * @param array $parameters Route parameters
+     * @param bool $absolute Whether to generate an absolute URL
+     * @return string The generated URL
+     */
+    function route(string $name, array $parameters = [], bool $absolute = false): string
+    {
+        static $generator = null;
+
+        // Create the URL generator once and reuse it
+        if ($generator === null) {
+            $generator = new \Core\Routing\UrlGenerator();
+        }
+
+        return $generator->route($name, $parameters, $absolute);
+    }
+
+    if (!function_exists('absolute_route')) {
+
+        /**
+         * Generate an absolute URL for a named route
+         * 
+         * Convenience wrapper around route() that always generates absolute URLs.
+         * 
+         * @πaram string $name The route name
+         * @param array $parameters Route parameters
+         * @return string The absolute URL (with domain)
+         */
+        function absolute_route(string $name, array $parameters = []): string
+        {
+            return route($name, $parameters, true);
+        };
+    }
+}
