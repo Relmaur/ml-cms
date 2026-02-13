@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php echo csrf_meta(); ?>
     <title><?php echo htmlspecialchars($pageTitle ?? 'Riven') ?></title>
     <style>
         body {
@@ -121,6 +122,24 @@
     </main>
 
     <?php require_once '../app/Views/partials/footer.php'; ?>
+
+    <script>
+        // Get the CSRF token from the meta tag
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        // Add to all AJAX requests
+        fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify({
+                title: 'My Post',
+                content: 'Post content'
+            })
+        });
+    </script>
 
 </body>
 

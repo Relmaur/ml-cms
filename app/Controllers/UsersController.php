@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use Core\Session;
 use Core\View;
+use Core\Session;
 use Core\Validator;
-use Core\EventDispatcher;
-use Core\Http\RedirectResponse;
-use Core\Http\Request;
-
-use App\Controllers\BaseController;
 use App\Models\User;
+use Core\Http\Request;
+use Core\Security\Csrf;
+
+use Core\EventDispatcher;
 use App\Events\UserRegistered;
+use Core\Http\RedirectResponse;
+use App\Controllers\BaseController;
 
 class UsersController extends BaseController
 {
@@ -118,6 +119,8 @@ class UsersController extends BaseController
             // Password is correct, set session
             Session::set('user_id', $user->id);
             Session::set('user_name', $user->name);
+
+            Csrf::regenerateToken();
 
             Session::flash('success', 'Welcome Back, ' . $user->name . '!');
 

@@ -151,8 +151,10 @@ class PostsController extends BaseController
             $data['content'] = htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8');
 
             if ($this->postModel->createPost($data)) {
-                // Cache::forget('posts.all');
+
+                Cache::forget('posts.all');
                 Session::flash('success', 'Post created successfully!');
+                
                 // Redirect to the blog index on success
                 return new RedirectResponse('/posts');
             }
@@ -243,14 +245,16 @@ class PostsController extends BaseController
             ];
 
             // Sanitize data
-            $data['title'] = htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8');
-            $data['content'] = htmlspecialchars($data['content'], ENT_QUOTES, 'UTF-8');
+            $data['title'] = e($data['title'], ENT_QUOTES, 'UTF-8');
+            $data['content'] = e($data['content'], ENT_QUOTES, 'UTF-8');
 
             if ($this->postModel->updatePost($data)) {
 
-                // Cache::forget('posts.all');
-                // Cache::forget('post.' . $id);
+                Cache::forget('posts.all');
+                Cache::forget('post.' . $id);
+
                 Session::flash('success', 'Post updated successfully');
+
                 // Redirect to the post's page on success
                 return new RedirectResponse('/posts/' . $id);
             }
@@ -271,9 +275,11 @@ class PostsController extends BaseController
 
         if ($this->postModel->deletePost($id)) {
 
-            // Cache::forget('posts.all');
-            // Cache::forget('post.' . $id);
+            Cache::forget('posts.all');
+            Cache::forget('post.' . $id);
+
             Session::flash('success', 'Post deleted successfully');
+
             // Redirect to the blog index on success
             return new RedirectResponse('/posts');
         }

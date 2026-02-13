@@ -8,6 +8,8 @@ $oldInput = Session::getFlash('old_input') ?? [];
 
 <h1>Register an Account</h1>
 <form action="/register" method="POST">
+    <?php echo csrf_field(); ?>
+    
     <div>
         <label for="name">Name</label>
         <input type="text" name="name" value="<?php echo htmlspecialchars($oldInput['name'] ?? '') ?>" required>

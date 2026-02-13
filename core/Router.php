@@ -25,7 +25,12 @@ class Router
     public function dispatch()
     {
         $uri = $this->request->path();
-        $method = $this->request->method();
+
+        /**
+         * Check for method spoofing
+         */
+        // If there's a _method field in POST data, use that instead
+        $method = $this->getRequestMethod();
 
         foreach (Route::getRoutes() as $route) {
 
@@ -40,6 +45,48 @@ class Router
 
                 // Extract action and call it
                 $action = $route['action'];
+
+                // Check if action is a closure
+                if ($action instanceof Closure) {
+                    return $this->runThroughMiddleware(
+
+                        $route['middleware'] ?? [],
+
+                        function ($request) use ($action, $matches) {
+                            // Call the closure with the request and any route parameters
+                            // For example: ROute::get('/posts/{id}', function($request, $id) { ... })
+                            $result = call_user_func_array($action, array_merge([$request], $matches));
+
+                            // If the closure returns a Response, use it directly
+                            // Otherwise, wrap the output in an HTMLResponse
+                            if ($result instanceof Response) {
+                                return $result;
+                            }
+
+                            // If closure echoes output instead of returning, capture it
+                            if ($result === null && ob_get_length() > 0) {
+                                $content = ob_get_clean();
+                                return new \Core\Http\HtmlResponse($content);
+                            }
+
+                            // If closure returned a string, wrap it in HtmlResponse
+                            if (is_string($result)) {
+                                return new \Core\Http\HtmlResponse($result);
+                            }
+
+                            // If closure returned an array, convert to JSON
+                            if (is_array($result)) {
+                                return new \Core\Http\JsonResponse($result);
+                            }
+
+                            // If closure returned null (just echoed output), that's okay too
+                            // The output is already sent to the browser
+                            return new \Core\Http\Response('', 200);
+                        }
+                    );
+                }
+
+                // Action is a controller array [ControllerClass::class, 'method']
                 if (is_array($action) && count($action) === 2) {
                     $controllerName = $action[0];
                     $methodName = $action[1];
@@ -74,13 +121,56 @@ class Router
     }
 
     /**
+     * Get the request method with spoofing support
+     * 
+     * @return String The request method
+     * 
+     * How methor spoofing works:
+     * 1. Check if this is a POST request
+     * 2. If yes, check if there's a _method field in the POST data
+     * 3. If _method exists, use that value (PUT, PATCH, DELETE)
+     * 4. Otherwise, use the actual HTTP method
+     * 
+     * This allos HTML forms (which only support GET/POST)
+     * to simulate PUT, PATCH, and DELETE requests.
+     * 
+     * Example form:
+     * <form method="POST">
+     *  <input type="hidden" name="_method" value="DELETE">
+     *  <!-- Browser sends POST, but we treat it as DELETE -->
+     * </form>
+     */
+    protected function getRequestMethod(): string
+    {
+        $method = $this->request->method();
+
+        // Only check for method spoofing on POST requests
+        if ($method === 'POST') {
+            $spoofedMethod = $this->request->input('_method');
+
+            if ($spoofedMethod) {
+                // Validate that the spoofed method is allowed
+
+                $allowedMethods = ['PUT', 'PATCH', 'DELETE'];
+                $spoofedMethod = strtoupper($spoofedMethod);
+
+                if (in_array($spoofedMethod, $allowedMethods)) {
+                    return $spoofedMethod;
+                }
+            }
+        }
+
+        return $method;
+    }
+
+    /**
      * Run the request through the middleware pipeline
      * 
      * @param array $middleware Array of middleware class names
      * @param Closure $destination The final controller action
      * @return Response
      */
-    protected function runThroughMiddleware(array $middleware, Closure $destination)
+    protected function runThroughMiddleware(array $middleware, Closure $destination): Response
     {
         $pipeline = new Pipeline($this->container);
 

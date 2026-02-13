@@ -11,14 +11,91 @@ class Route
     protected static $routes = [];
     protected static $groupStack = [];
 
-    public static function get($uri, $action)
+    /**
+     * Register a GET route
+     * 
+     * GET is used to RETRIEVE data (show a page, list items, etc.)
+     * Example: Route::get('/items', [ItemsController::class, 'index']);
+     */
+    public static function get($uri, $action): RouteRegistrar
     {
         return self::add('GET', $uri, $action);
     }
 
-    public static function post($uri, $action)
+    /**
+     * Register a POST route
+     * 
+     * POST is used to CREATE new data (submit forms, add new items, etc.)
+     * Example: Route::post('/items', [ItemsController::class, 'store']);
+     */
+    public static function post($uri, $action): RouteRegistrar
     {
         return self::add('POST', $uri, $action);
+    }
+
+    /**
+     * Register a a PUT route
+     * 
+     * PUT is used to REPLACE an entire resource (update ALL fields)
+     * 
+     * Example: Route::put('/items/{id}', [ItemsController::class, 'update']);
+     * 
+     * Think of PUT as "replace the whole thing"
+     */
+    public static function put($uri, $action): RouteRegistrar
+    {
+        return self::add('PUT', $uri, $action);
+    }
+
+    /**
+     * Register a PATCH route
+     * 
+     * PATCH is used to UPDATE PART of a resource (update specific fields)
+     * Example: Route::patch('/items/{id}', [ItemsController::class, 'update']);
+     * 
+     * Think of PATCH as "just change this one thing"
+     */
+    public static function patch($uri, $action): RouteRegistrar
+    {
+        return self::add('PATCH', $uri, $action);
+    }
+
+    /**
+     * Register a DELETE route
+     * 
+     * DELETE is used to REMOVE a resource
+     * Example: Route::delete('/items/{id}', [ItemsController::class, 'destroy']);
+     */
+    public static function delete($uri, $action): RouteRegistrar
+    {
+        return self::add('DELETE', $uri, $action);
+    }
+
+    /**
+     * Register a route that responds to multiple HTTP methods
+     * 
+     * Useful when the same controller method handles multiple verbs
+     * Example: Route::match(['GET', 'POST'], '/contact', [ContactController::class, 'handle']);
+     */
+    public static function match(array $methods, $uri, $action): void
+    {
+        foreach ($methods as $method) {
+            self::add(strtoupper($method), $uri, $action);
+        }
+    }
+
+    /**
+     * Register a route that responds to ANY HTTP method
+     * 
+     * Useful for catch-all routes or debugging
+     * Example: Route::any('/fallback', [FallbackController::class, 'handle']);
+     */
+    public static function any($uri, $action): void
+    {
+        $methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
+        foreach ($methods as $method) {
+            self::add($method, $uri, $action);
+        }
     }
 
     /**
@@ -72,6 +149,8 @@ class Route
 
     /**
      * Merge attributes from the group stack}
+     * 
+     * When routes are nested in groups, this combines all the group attributes
      */
     protected static function mergeGroupAttributes()
     {
@@ -81,7 +160,7 @@ class Route
         ];
 
         foreach (self::$groupStack as $group) {
-            // Merge prefixed
+            // Merge prefixes (concatenate them)
             if (isset($group['prefix'])) {
                 $attributes['prefix'] = trim($attributes['prefix'], '/') . '/' . trim($group['prefix'], '/');
             }
@@ -96,7 +175,7 @@ class Route
     }
 
     /**
-     * Add middleware to a specific route (called by RouteRegistrar)
+     * Add a middleware to a specific route (called by RouteRegistrar)
      */
     public static function addMiddlewareToRoute($index, $middleware)
     {
@@ -110,6 +189,9 @@ class Route
         );
     }
 
+    /**
+     * Get all registered routes
+     */
     public static function getRoutes()
     {
         return self::$routes;

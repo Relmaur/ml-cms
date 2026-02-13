@@ -21,9 +21,11 @@ use App\Controllers\Api\PostApiController;
 // Middleware
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
+use App\Middleware\CsrfMiddleware;
 
 use App\Events\UserRegistered;
 use App\Listeners\SendWelcomeEmailListener;
+use Core\Security\Csrf;
 
 // Load environment variables from .env
 $dotenv = new Dotenv();
@@ -86,6 +88,7 @@ $container->bind(SendWelcomeEmailListener::class, function () use ($container) {
  */
 $container->bind(AuthMiddleware::class, fn() => new AuthMiddleware());
 $container->bind(GuestMiddleware::class, fn() => new GuestMiddleware());
+$container->bind(CsrfMiddleware::class, fn() => new CsrfMiddleware());
 
 // We can return the container to be used by other parts of the app
 return $container;

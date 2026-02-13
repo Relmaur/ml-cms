@@ -8,6 +8,8 @@ $oldValues = Session::getFlash('old_input') ?? [];
 
 <h1>Login</h1>
 <form action="/login" method="POST">
+    <?php echo csrf_field(); ?>
+
     <div>
         <label for="email">Email</label>
         <input type="email" name="email" value="<?php echo htmlspecialchars($oldValues['email'] ?? '') ?>" required>
