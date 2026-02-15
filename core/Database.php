@@ -6,7 +6,7 @@ namespace Core;
 
 use PDO;
 use PDOException;
-use Core\Database\QueryBuilder;
+use Core\QueryBuilder;
 
 class Database
 {
