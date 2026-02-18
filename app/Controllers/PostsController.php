@@ -58,4 +58,11 @@ class PostsController extends BaseController
     /**
      * Store a new post
      */
+    public function store(Request $request)
+    {
+        Post::createPost($request);
+
+        Session::flash('success', 'Post created successfully!');
+        return new RedirectResponse(route('posts.index'));
+    }
 }

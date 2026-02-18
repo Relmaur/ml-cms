@@ -1,35 +1,35 @@
 <?php
 
-use Symfony\Component\Dotenv\Dotenv;
-
-use Core\Container;
-use Core\EventDispatcher;
-use Core\Mailer;
-
-// Models
-use App\Models\Post;
-use App\Models\User;
-
-// Controllers
-use App\Controllers\PostsController;
-use App\Controllers\UsersController;
-use App\Controllers\DashboardController;
-use App\Controllers\PagesController;
-// Api
 use App\Controllers\Api\PostApiController;
 
-// Middleware
-use App\Middleware\AuthMiddleware;
-use App\Middleware\GuestMiddleware;
-use App\Middleware\CsrfMiddleware;
+use App\Controllers\DashboardController;
+use App\Controllers\PagesController;
+use App\Controllers\PostsController;
 
+// Models
+use App\Controllers\UsersController;
 use App\Events\UserRegistered;
-use App\Listeners\SendWelcomeEmailListener;
-use Core\Security\Csrf;
 
-// Load environment variables from .env
-$dotenv = new Dotenv();
-$dotenv->load(__DIR__ . '/.env');
+// Controllers
+use App\Listeners\SendWelcomeEmailListener;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\CsrfMiddleware;
+use App\Middleware\GuestMiddleware;
+// Api
+use App\Models\Post;
+
+// Middleware
+use App\Models\User;
+use Core\Container;
+
+use Core\EventDispatcher;
+use Core\Mailer;
+use Core\Security\Csrf;
+use Symfony\Component\Dotenv\Dotenv;
+use Core\Environment;
+
+// Load environment variables FIRST
+Environment::load();
 
 $container = new Container();
 $dispatcher = new EventDispatcher($container);

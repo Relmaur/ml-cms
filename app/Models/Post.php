@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Core\Http\Request;
 use Core\Model;
+use Core\Session;
 
 /**
  * Post Model
@@ -146,5 +148,23 @@ class Post extends Model
         return static::orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();
+    }
+
+    /**
+     * Save the post
+     * 
+     * @param Request $data The data coming from the request
+     */
+    public static function createPost(Request $request)
+    {
+        $title = $request->input('title') ?: '';
+        $content = $request->input('content') ?: '';
+        $author_id = Session::get('user_id');
+
+        return static::create([
+            'title' => $title,
+            'content' => $content,
+            'author_id' => $author_id
+        ]);
     }
 }

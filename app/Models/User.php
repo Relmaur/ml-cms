@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace APp\Models;
 
+use App\Models\Post;
 use Core\Model;
 
 /**

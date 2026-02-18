@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-use Core\Route;
-use App\Middleware\AuthMiddleware;
-use App\Middleware\CsrfMiddleware;
-use App\Middleware\GuestMiddleware;
+use App\Controllers\DashboardController;
 use App\Controllers\PagesController;
 use App\Controllers\PostsController;
 use App\Controllers\UsersController;
-use App\Controllers\DashboardController;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\CsrfMiddleware;
+use App\Middleware\GuestMiddleware;
+use Closure;
+use Core\Environment;
+use Core\Route;
 
 // Apply CSRF to all routes
 Route::group(['middleware' => [CsrfMiddleware::class]], function () {
@@ -182,6 +184,7 @@ Route::get('/old-page', function ($request) {
 });
 */
 
+/*
 // In routes/web.php
 Route::get('/test-query-builder', function ($request) {
     $db = Core\Database::getInstance();
@@ -293,3 +296,33 @@ Route::get('/test-model', function ($request) {
 
     exit;
 });
+
+Route::get('/test-env', function ($request) {
+    echo '<h1>Environment Configuration Test</h1>';
+
+    echo '<h2>Environment Info</h2>';
+    echo '<p>APP_ENV: ' . env('APP_ENV') . '</p>';
+    echo '<p>APP_DEBUG: ' . (env('APP_DEBUG') ? 'true' : 'false') . '</p>';
+    echo '<p>APP_URL: ' . env('APP_URL') . '</p>';
+
+    echo '<h2>Database Info</h2>';
+    echo '<p>DB_CONNECTION: ' . env('DB_CONNECTION') . '</p>';
+
+    if (env('DB_CONNECTION') === 'sqlite') {
+        echo '<p>DB_PATH: ' . env('DB_PATH') . '</p>';
+    } else {
+        echo '<p>DB_HOST: ' . env('DB_HOST') . '</p>';
+        echo '<p>DB_DATABASE: ' . env('DB_DATABASE') . '</p>';
+    }
+
+    $db = Core\Database::getInstance();
+    echo '<p>Active Driver: ' . $db->getDriver() . '</p>';
+
+    echo '<h2>Environment Helpers</h2>';
+    echo '<p>Is Local: ' . (Environment::isLocal() ? 'Yes' : 'No') . '</p>';
+    echo '<p>Is Production: ' . (Environment::isProduction() ? 'Yes' : 'No') . '</p>';
+    echo '<p>Is Debug: ' . (Environment::isLocal() ? 'Yes' : 'No') . '</p>';
+
+    exit;
+});
+*/

@@ -151,3 +151,24 @@ if (!function_exists('route')) {
         };
     }
 }
+
+if (!function_exists('env')) {
+    /**
+     * Get an environment variable value
+     * 
+     * This is a shorthand for Environment::get()
+     * 
+     * Usage:
+     * env('APP_DEBUG', false)
+     * env('DB_CONNECTION', 'sqlite')
+     * env('APP_URL', 'http://localhost')
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    function env($key, $default = null)
+    {
+        return \Core\Environment::get($key, $default);
+    }
+}

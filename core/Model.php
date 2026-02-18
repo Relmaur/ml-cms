@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Core\Database;
+use Core\ModelQueryBuilder;
 
 /**
  * Base Model Class (Active Record Pattern)
@@ -132,7 +133,8 @@ abstract class Model
     public static function query()
     {
         $model = new static();
-        return self::$db->table($model->table);
+        $queryBuilder = self::$db->table($model->table);
+        return new ModelQueryBuilder($queryBuilder, static::class);
     }
 
     /**
@@ -569,6 +571,19 @@ abstract class Model
         $model->dirty = [];
 
         return $model;
+    }
+
+    /**
+     * Create a model instance from a raw database row
+     *
+     * Public entry point used by ModelQueryBuilder for hydration.
+     *
+     * @param object $row A stdClass object from the database
+     * @return static
+     */
+    public static function newFromRow($row)
+    {
+        return static::hydrateOne($row);
     }
 
     /**

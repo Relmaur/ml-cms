@@ -12,11 +12,17 @@ package-lock.json
 yarn.lock
 
 # Environment files
+# Environment files (contain sensitive data)
 .env
 .env.local
+.env.*.local
 .env.production
 .env.staging
 .env.development
+
+# Keep the example file
+!.env.example
+
 config/database.php
 
 # IDE and editor files
